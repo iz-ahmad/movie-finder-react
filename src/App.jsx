@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Search from "./components/Search.jsx";
+import HeroBanner from "./components/HeroBanner.jsx";
 import Spinner from "./components/Spinner.jsx";
 import MovieCard from "./components/MovieCard.jsx";
+import Footer from "./components/Footer.jsx";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -66,42 +67,40 @@ const App = () => {
     }, [debouncedSearchTerm]);
 
     return (
-        <main>
-            <div className="pattern"></div>
+        <>
+            <main>
+                <div className="pattern"></div>
 
-            <div className="wrapper">
-                <header className="mb-3">
-                    <img src="./hero.png" alt="Hero Banner" />
-                    <h1>
-                        Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle!
-                    </h1>
+                <div className="wrapper">
+                    <HeroBanner searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
-                    <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                </header>
+                    <section className="all-movies">
+                        <h2>All Movies</h2>
 
-                <section className="all-movies">
-                    <h2>All Movies</h2>
+                        {isLoading ? (
+                            <Spinner />
+                        ) : errorMessage ? (
+                            <p className="text-red-500">{errorMessage}</p>
+                        ) : (
+                            <>
+                                <p className="text-gray-400">
+                                    {movieList.length || "No"} Movie{movieList.length && movieList.length === 1 ? "" : "s"}
+                                    {debouncedSearchTerm ? " Found" : " Loaded"}
+                                </p>
 
-                    {isLoading ? (
-                        <Spinner />
-                    ) : errorMessage ? (
-                        <p className="text-red-500">{errorMessage}</p>
-                    ) : (
-                        <>
-                            <p className="text-gray-400">
-                                {movieList.length || "No"} Movie{movieList.length && movieList.length === 1 ? "" : "s"}
-                                {debouncedSearchTerm ? " Found" : " Loaded"}
-                            </p>
-                            <ul>
-                                {movieList.map((movie) => (
-                                    <MovieCard key={movie.id} movie={movie} />
-                                ))}
-                            </ul>
-                        </>
-                    )}
-                </section>
-            </div>
-        </main>
+                                <ul>
+                                    {movieList.map((movie) => (
+                                        <MovieCard key={movie.id} movie={movie} />
+                                    ))}
+                                </ul>
+                            </>
+                        )}
+                    </section>
+                </div>
+            </main>
+
+            <Footer />
+        </>
     );
 };
 
