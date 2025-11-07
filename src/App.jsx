@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HeroBanner from "./components/HeroBanner.jsx";
-import Spinner from "./components/Spinner.jsx";
-import MovieCard from "./components/MovieCard.jsx";
+import TrendingMovies from "./components/TrendingMovies.jsx";
+import AllMovies from "./components/AllMovies.jsx";
 import Footer from "./components/Footer.jsx";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
@@ -23,6 +23,7 @@ const App = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const [movieList, setMovieList] = useState([]);
+    const [trendingMovies, setTrendingMovies] = useState([]);
 
     const fetchMovies = async (query = "") => {
         setIsLoading(true);
@@ -54,6 +55,19 @@ const App = () => {
         }
     };
 
+    const loadTrendingMovies = async () => {
+        try {
+            const movies = movieList
+                .filter((movie) => movie.vote_count !== undefined)
+                .sort((a, b) => b.vote_count - a.vote_count)
+                .slice(0, 5);
+
+            setTrendingMovies(movies);
+        } catch (error) {
+            console.error(`Error fetching trending movies: ${error}`);
+        }
+    };
+
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setDebouncedSearchTerm(searchTerm);
@@ -66,36 +80,23 @@ const App = () => {
         fetchMovies(debouncedSearchTerm);
     }, [debouncedSearchTerm]);
 
+    useEffect(() => {
+        loadTrendingMovies();
+    }, [movieList]);
+
     return (
         <>
             <main>
                 <div className="pattern"></div>
 
                 <div className="wrapper">
-                    <HeroBanner searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                    <HeroBanner searchTerm={searchTerm} setSearchTerm={setSearchTerm} debouncedSearchTerm={debouncedSearchTerm} />
 
-                    <section className="all-movies">
-                        <h2>All Movies</h2>
+                    {trendingMovies.length > 0 && (
+                        <TrendingMovies trendingMovies={trendingMovies} />
+                    )}
 
-                        {isLoading ? (
-                            <Spinner />
-                        ) : errorMessage ? (
-                            <p className="text-red-500">{errorMessage}</p>
-                        ) : (
-                            <>
-                                <p className="text-gray-400">
-                                    {movieList.length || "No"} Movie{movieList.length && movieList.length === 1 ? "" : "s"}
-                                    {debouncedSearchTerm ? " Found" : " Loaded"}
-                                </p>
-
-                                <ul>
-                                    {movieList.map((movie) => (
-                                        <MovieCard key={movie.id} movie={movie} />
-                                    ))}
-                                </ul>
-                            </>
-                        )}
-                    </section>
+                    <AllMovies movieList={movieList} isLoading={isLoading} errorMessage={errorMessage} debouncedSearchTerm={debouncedSearchTerm} />
                 </div>
             </main>
 
