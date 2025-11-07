@@ -37,6 +37,10 @@
         @apply sm:mt-10 mt-5;
     }
 
+    footer {
+        @apply mt-10 block justify-center items-center;
+    }
+
     header img {
         @apply w-full max-w-lg h-auto object-contain mx-auto drop-shadow-md;
     }
@@ -72,7 +76,7 @@
     }
 
     .search {
-        @apply w-full bg-light-100/5 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto;
+        @apply w-1/2 bg-light-100/5 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto;
 
         & div {
             @apply relative flex items-center;
