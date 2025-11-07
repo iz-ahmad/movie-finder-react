@@ -4,9 +4,10 @@ const Search = ({ searchTerm, setSearchTerm }) => {
     return (
         <div className="search">
             <div>
-                <img src="search.svg" alt="search" />
+                <img className="ml-2" src="search.svg" alt="search" />
 
                 <input 
+                    className="focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent focus:rounded-md py-3 pr-4 pl-12"
                     type="text" 
                     placeholder="Search through thousands of movies" 
                     value={searchTerm} 
