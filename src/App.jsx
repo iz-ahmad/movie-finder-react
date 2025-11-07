@@ -87,11 +87,17 @@ const App = () => {
                     ) : errorMessage ? (
                         <p className="text-red-500">{errorMessage}</p>
                     ) : (
-                        <ul>
-                            {movieList.map((movie) => (
-                                <MovieCard key={movie.id} movie={movie} />
-                            ))}
-                        </ul>
+                        <>
+                            <p className="text-gray-400">
+                                {movieList.length || "No"} Movie{movieList.length && movieList.length === 1 ? "" : "s"}
+                                {debouncedSearchTerm ? " Found" : " Loaded"}
+                            </p>
+                            <ul>
+                                {movieList.map((movie) => (
+                                    <MovieCard key={movie.id} movie={movie} />
+                                ))}
+                            </ul>
+                        </>
                     )}
                 </section>
             </div>
